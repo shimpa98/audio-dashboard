@@ -1,4 +1,3 @@
-// src/components/TimelineView/TimelineView.jsx
 import React, { useState, useEffect } from 'react';
 import { apiEndpoints } from '../../services/api';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
@@ -11,8 +10,10 @@ const TimelineView = () => {
   useEffect(() => {
     const fetchTimeline = async () => {
       try {
-        const response = await apiEndpoints.getTimeline(); // Use current date or param
+        const response = await apiEndpoints.getTimeline();
         setTimeline(response.data.timeline || []);
+      } catch (err) {
+        setTimeline([]); // Fallback to empty
       } finally {
         setLoading(false);
       }
@@ -20,28 +21,34 @@ const TimelineView = () => {
     fetchTimeline();
   }, []);
 
-  if (loading) return <div>Loading timeline...</div>;
-
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Processing Timeline</h2>
-      <VerticalTimeline>
-        {timeline.map((event, index) => (
-          <VerticalTimelineElement
-            key={index}
-            date={event.timestamp_readable}
-            iconStyle={{ background: event.status === 'success' ? 'green' : 'red', color: '#fff' }}
-          >
-            <h3 className="font-bold">{event.filename}</h3>
-            <p>Duration: {event.processing_time.toFixed(2)}s</p>
-            <span className={`inline-block px-2 py-1 rounded text-xs ${
-              event.status === 'success' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
-            }`}>
-              {event.status}
-            </span>
-          </VerticalTimelineElement>
-        ))}
-      </VerticalTimeline>
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="spinner"></div>
+        </div>
+      ) : (
+        <VerticalTimeline>
+          {timeline.map((event, index) => (
+            <VerticalTimelineElement
+              key={index}
+              date={event.timestamp_readable}
+              iconStyle={{ background: event.status === 'success' ? 'var(--success)' : 'var(--error)', color: '#fff' }}
+            >
+              <h3 className="font-bold">{event.filename}</h3>
+              <p>Duration: {event.processing_time.toFixed(2)}s</p>
+              <span
+                className={`inline-block px-2 py-1 rounded text-xs ${
+                  event.status === 'success' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
+                }`}
+              >
+                {event.status}
+              </span>
+            </VerticalTimelineElement>
+          ))}
+        </VerticalTimeline>
+      )}
     </div>
   );
 };

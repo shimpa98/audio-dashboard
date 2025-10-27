@@ -1,22 +1,20 @@
-// src/components/StatusPanel/StatusPanel.jsx
 import React from 'react';
-import { useAppStatus } from '../../hooks/useAppStatus';
 
 const StatusPanel = ({ status }) => {
   if (!status) return null;
 
-  const { status: appStatus, tasks, files, metrics } = status;
+  const { status: appStatus, tasks, files } = status;
   const uptime = Math.floor(status.uptime_seconds / 60);
-  const statusColor = appStatus === 'running' ? 'bg-green-500' : appStatus === 'paused' ? 'bg-yellow-500' : 'bg-red-500';
+  const statusClass = `status-dot status-${appStatus}`;
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 w-80 z-50">
-      <h3 className="font-bold text-gray-800 dark:text-white mb-2">App Status</h3>
+    <div className="status-panel">
+      <h3 className="font-bold mb-2">App Status</h3>
       <div className="flex items-center mb-2">
-        <div className={`w-3 h-3 rounded-full ${statusColor} mr-2`}></div>
+        <div className={statusClass}></div>
         <span className="text-sm font-medium capitalize">{appStatus}</span>
       </div>
-      <p className="text-xs text-gray-600 dark:text-gray-400">Uptime: {uptime}m</p>
+      <p className="text-xs text-secondary">Uptime: {uptime}m</p>
       <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
         <div>Queue: {tasks.queue_size}</div>
         <div>Processing: {tasks.processing}</div>

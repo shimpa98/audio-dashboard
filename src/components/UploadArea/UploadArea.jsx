@@ -1,4 +1,3 @@
-// src/components/UploadArea/UploadArea.jsx
 import React from 'react';
 import { apiEndpoints } from '../../services/api';
 import { toast } from 'react-toastify';
@@ -35,10 +34,10 @@ const UploadArea = () => {
       onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
       onClick={handleClick}
-      className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+      className="upload-area"
     >
-      <p className="text-gray-500 mb-2">Drag files here or click to upload</p>
-      <p className="text-sm text-gray-400">Supports MP3, WAV, M4A, etc.</p>
+      <p className="text-secondary mb-2">Drag files here or click to upload</p>
+      <p className="text-sm text-secondary">Supports MP3, WAV, M4A, etc.</p>
     </div>
   );
 };

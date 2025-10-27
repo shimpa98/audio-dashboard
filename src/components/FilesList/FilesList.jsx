@@ -1,4 +1,3 @@
-// src/components/FilesList/FilesList.jsx
 import React, { useState } from 'react';
 import { useFilesList } from '../../hooks/useFilesList';
 
@@ -12,56 +11,57 @@ const FilesList = () => {
     fetchFiles({ [name]: value });
   };
 
-  if (loading) return <div>Loading files...</div>;
-
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Recent Files</h2>
-      <div className="mb-4 space-x-2">
-        <select name="days" onChange={handleFilterChange} className="p-2 border rounded">
+      <div className="mb-4 flex space-x-2">
+        <select name="days" onChange={handleFilterChange} className="p-2">
           <option value={7}>Last 7 Days</option>
           <option value={30}>Last 30 Days</option>
         </select>
-        <input
-          type="date"
-          name="date"
-          onChange={handleFilterChange}
-          className="p-2 border rounded"
-        />
-        <select name="status" onChange={handleFilterChange} className="p-2 border rounded">
+        <input type="date" name="date" onChange={handleFilterChange} className="p-2" />
+        <select name="status" onChange={handleFilterChange} className="p-2">
           <option value="">All Status</option>
           <option value="success">Success</option>
           <option value="failed">Failed</option>
         </select>
       </div>
-      <table className="w-full bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <thead>
-          <tr className="bg-gray-200 dark:bg-gray-700">
-            <th className="px-4 py-2 text-left">Filename</th>
-            <th className="px-4 py-2 text-left">Time</th>
-            <th className="px-4 py-2 text-left">Duration</th>
-            <th className="px-4 py-2 text-left">Status</th>
-            <th className="px-4 py-2 text-left">Size</th>
-          </tr>
-        </thead>
-        <tbody>
-          {files.map((file, index) => (
-            <tr key={index} className="border-t">
-              <td className="px-4 py-2">{file.filename}</td>
-              <td className="px-4 py-2">{file.timestamp_readable}</td>
-              <td className="px-4 py-2">{file.processing_time.toFixed(2)}s</td>
-              <td className="px-4 py-2">
-                <span className={`px-2 py-1 rounded text-xs ${
-                  file.status === 'success' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
-                }`}>
-                  {file.status}
-                </span>
-              </td>
-              <td className="px-4 py-2">{(file.size_bytes / 1024 / 1024).toFixed(2)} MB</td>
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="spinner"></div>
+        </div>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Filename</th>
+              <th>Time</th>
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Size</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {files.map((file, index) => (
+              <tr key={index}>
+                <td>{file.filename}</td>
+                <td>{file.timestamp_readable}</td>
+                <td>{file.processing_time.toFixed(2)}s</td>
+                <td>
+                  <span
+                    className={`px-2 py-1 rounded text-xs ${
+                      file.status === 'success' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
+                    }`}
+                  >
+                    {file.status}
+                  </span>
+                </td>
+                <td>{(file.size_bytes / 1024 / 1024).toFixed(2)} MB</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
